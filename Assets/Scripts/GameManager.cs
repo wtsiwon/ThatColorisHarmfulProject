@@ -1,9 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : Singleton<GameManager>
 {
+    [SerializeField]
+    [Tooltip("옆으로 넘기는 버튼")]
+    private Button passBtn;
+
+    [SerializeField]
+    [Tooltip("물건 부수는 버튼")]
+    private Button breakBtn;
+
     [Tooltip("속도가 증가하는 점수")]
     public int speedIncreasePoint;
 
@@ -14,7 +23,6 @@ public class GameManager : Singleton<GameManager>
         set
         {
             spdLevel = value;
-            
         }
     }
 
@@ -29,7 +37,19 @@ public class GameManager : Singleton<GameManager>
     }
 
     [Tooltip("현재 떨어지고 있는 오브젝트")]
-    public Obj currentObj;
+    private Obj currentFallingObj;
+    public Obj CurrentFallingObj
+    {
+        get => currentFallingObj;
+        set
+        {
+            currentFallingObj = value;
+            if (currentFallingObj == null) 
+            {
+                ObjSpawner.Instance.ObjSpawn();
+            }
+        }
+    }
 
     private bool isGameStart;
     public bool IsGameStart
@@ -51,10 +71,9 @@ public class GameManager : Singleton<GameManager>
 
     }
 
-
     void Start()
     {
-        
+
     }
 
     void Update()

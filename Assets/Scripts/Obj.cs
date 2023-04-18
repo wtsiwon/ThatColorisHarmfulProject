@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public enum EObjType
 {
@@ -34,9 +35,13 @@ public class Obj : MonoBehaviour
         }
     }
 
-    public void SetObj()
+    /// <summary>
+    /// Obj세팅함수
+    /// </summary>
+    /// <param name="type"></param>
+    public void SetObj(EObjType type)
     {
-
+        this.type = type;
     }
 
     public Vector3 dir = Vector3.down;
@@ -69,6 +74,9 @@ public class Obj : MonoBehaviour
                 break;
             case EObjState.Correct:
 
+                break;
+            default:
+                Debug.Assert(false, "어..? 여기 오면 안돼는디");
                 break;
         }
     }
