@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,14 +6,14 @@ using UnityEngine.UI;
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField]
-    [Tooltip("¿·À¸·Î ³Ñ±â´Â ¹öÆ°")]
+    [Tooltip("ì˜†ìœ¼ë¡œ ë„˜ê¸°ëŠ” ë²„íŠ¼")]
     private Button passBtn;
 
     [SerializeField]
-    [Tooltip("¹°°Ç ºÎ¼ö´Â ¹öÆ°")]
+    [Tooltip("ë¬¼ê±´ ë¶€ìˆ˜ëŠ” ë²„íŠ¼")]
     private Button breakBtn;
 
-    [Tooltip("¼Óµµ°¡ Áõ°¡ÇÏ´Â Á¡¼ö")]
+    [Tooltip("ì†ë„ê°€ ì¦ê°€í•˜ëŠ” ì ìˆ˜")]
     public int speedIncreasePoint;
 
     private int spdLevel;
@@ -36,7 +36,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    [Tooltip("ÇöÀç ¶³¾îÁö°í ÀÖ´Â ¿ÀºêÁ§Æ®")]
+    [Tooltip("í˜„ì¬ ë–¨ì–´ì§€ê³  ìˆëŠ” ì˜¤ë¸Œì íŠ¸")]
     private Obj currentFallingObj;
     public Obj CurrentFallingObj
     {
@@ -63,7 +63,7 @@ public class GameManager : Singleton<GameManager>
     }
 
     /// <summary>
-    /// °ÔÀÓ ¼¼ÆÃ
+    /// ê²Œì„ ì„¸íŒ…
     /// </summary>
     private void SetGame()
     {

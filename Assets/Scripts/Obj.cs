@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -36,7 +36,7 @@ public class Obj : MonoBehaviour
     }
 
     /// <summary>
-    /// Obj¼¼ÆÃÇÔ¼ö
+    /// Objì„¸íŒ…í•¨ìˆ˜
     /// </summary>
     /// <param name="type"></param>
     public void SetObj(EObjType type)
@@ -53,7 +53,7 @@ public class Obj : MonoBehaviour
 
 
     /// <summary>
-    /// »óÅÂ¿¡ µû¸¥ ¿òÁ÷ÀÓº¯È­
+    /// ìƒíƒœì— ë”°ë¥¸ ì›€ì§ì„ë³€í™”
     /// </summary>
     private void MovementOnTheState()
     {
@@ -76,7 +76,7 @@ public class Obj : MonoBehaviour
 
                 break;
             default:
-                Debug.Assert(false, "¾î..? ¿©±â ¿À¸é ¾ÈµÅ´Âµğ");
+                Debug.Assert(false, "ì–´..? ì—¬ê¸° ì˜¤ë©´ ì•ˆë¼ëŠ”ë””");
                 break;
         }
     }

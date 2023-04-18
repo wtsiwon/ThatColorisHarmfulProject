@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,13 +9,13 @@ public enum ESoundType
 }
 public class SoundManager : Singleton<SoundManager>
 {
-    [Tooltip("BGM´ã´Â List")]
+    [Tooltip("BGMë‹´ëŠ” List")]
     private List<AudioClip> BGMList = new List<AudioClip>();
 
-    [Tooltip("È¿°úÀ½´ã´Â List")]
+    [Tooltip("íš¨ê³¼ìŒë‹´ëŠ” List")]
     private List<AudioClip> SFXList = new List<AudioClip>();
 
-    [Tooltip("»ç¿îµå ´ã´Â Dictionary")]
+    [Tooltip("ì‚¬ìš´ë“œ ë‹´ëŠ” Dictionary")]
     private Dictionary<string, AudioClip> soundDic = new Dictionary<string, AudioClip>();
 
     private void Start()
