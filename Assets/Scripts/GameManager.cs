@@ -76,7 +76,6 @@ public class GameManager : Singleton<GameManager>
     {
         get
         {
-
             return objFallingSpd;
 
         }
