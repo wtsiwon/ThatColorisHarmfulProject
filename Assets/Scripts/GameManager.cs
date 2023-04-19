@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+public enum EButtonType
+{
+    Pass,
+    Break,
+}
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField]
@@ -44,14 +50,6 @@ public class GameManager : Singleton<GameManager>
             hpUI[i].gameObject.SetActive(true);
         }
     }
-
-    [SerializeField]
-    [Tooltip("최소 속도")]
-    private float minSpd;
-
-    [SerializeField]
-    [Tooltip("최대 속도")]
-    private float maxSpd;
 
     [SerializeField]
     [Tooltip("속도 증가량")]
@@ -129,8 +127,93 @@ public class GameManager : Singleton<GameManager>
 
     void Start()
     {
-
+        AddListener();
     }
+
+    /// <summary>
+    /// 버튼 이벤트 등록
+    /// </summary>
+    private void AddListener()
+    {
+        passBtn.onClick.AddListener(() =>
+        {
+            PressPassBtn();
+        });
+
+        breakBtn.onClick.AddListener(() =>
+        {
+            PressBreakBtn();
+        });
+    }
+
+    /// <summary>
+    /// Pass버튼을 눌렀을 때
+    /// </summary>
+    public void PressPassBtn()
+    {
+        if (currentFallingObj == null) return;
+        FallingObjControl(EButtonType.Pass);
+    }
+
+    /// <summary>
+    /// Break버튼을 눌렀을 때
+    /// </summary>
+    public void PressBreakBtn()
+    {
+        if (currentFallingObj == null) return;
+        FallingObjControl(EButtonType.Break);
+    }
+
+    private void FallingObjControl(EButtonType type)
+    {
+        if(type == EButtonType.Pass)
+        {
+            if(CheckCurrentFallingObj() == EObjType.Other)
+            {
+                Pass();
+            }
+            else
+            {
+                Drop();
+            }
+        }
+        else if(type == EButtonType.Break)
+        {
+            if(CheckCurrentFallingObj() == EObjType.Other)
+            {
+                Drop();
+            }
+            else
+            {
+                Break();
+            }
+        }
+    }
+
+    public void Pass()
+    {
+        currentFallingObj.State = EObjState.Pass;
+        currentFallingObj = null;
+    }
+
+    public void Break()
+    {
+        currentFallingObj.State = EObjState.Break;
+        currentFallingObj = null;
+    }
+
+    public void Drop()
+    {
+        currentFallingObj.State = EObjState.Drop;
+        currentFallingObj = null;
+    }
+
+    private EObjType CheckCurrentFallingObj()
+    {
+        EObjType type = currentFallingObj.type;
+        return type;
+    }
+
 
     void Update()
     {
@@ -139,6 +222,6 @@ public class GameManager : Singleton<GameManager>
 
     private void OnDie()
     {
-
+        
     }
 }
