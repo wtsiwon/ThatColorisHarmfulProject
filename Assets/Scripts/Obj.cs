@@ -28,6 +28,22 @@ public class Obj : MonoBehaviour
     public float timeScale = 1;
 
     [SerializeField]
+    [Tooltip("상호작용이 가능해지는 포지션 Y값")]
+    private float interactionPossiblePositionY;
+
+    [SerializeField]
+    [Tooltip("상호작용이 끝나는 포지션 Y값")]
+    private float interactionEndPositionY;
+
+    [SerializeField]
+    [Tooltip("아래쪽 파괴 Y Position")]
+    private float downDestroyPositionY;
+
+    [SerializeField]
+    [Tooltip("오른쪽 파괴 X Position")]
+    private float rightDestroyPositionX;
+
+    [SerializeField]
     [Tooltip("오브젝트의 상태")]
     private EObjState state = EObjState.FallDown;
     public EObjState State
@@ -43,10 +59,12 @@ public class Obj : MonoBehaviour
     /// <summary>
     /// Obj 세팅함수
     /// </summary>
-    /// <param name="type"></param>
-    public void SetObjType(EObjType type)
+    /// <param name="type">obj의 색</param>
+    /// <param name="spd">이동 속도</param>
+    public void SetObj(EObjType type, float spd)
     {
         this.type = type;
+        this.spd = spd;
     }
 
     [HideInInspector]
@@ -54,13 +72,34 @@ public class Obj : MonoBehaviour
 
     private void Start()
     {
-        
+        SetObj(EObjType.Green, 10);
     }
+    
     private void Update()
     {
         Move();
     }
 
+    private void DestroyObj()
+    {
+
+    }
+
+    private void ObjState()
+    {
+        if (GameManager.Instance.CurrentFallingObj == null) return;
+
+        float currentPosY = transform.position.y;
+        if (currentPosY < interactionPossiblePositionY && currentPosY > interactionEndPositionY)
+        {
+            GameManager.Instance.CurrentFallingObj = this;
+        }
+        else if(currentPosY < interactionEndPositionY)
+        {
+            State = EObjState.Drop;
+            GameManager.Instance.CurrentFallingObj = null;
+        }
+    }
 
     /// <summary>
     /// 상태에 따른 움직임변화
@@ -73,7 +112,7 @@ public class Obj : MonoBehaviour
                 dir = Vector3.down;
                 break;
             case EObjState.Slow:
-                
+                spd = GameManager.Instance.= InteractionSpd;
                 break;
             case EObjState.Pass:
 

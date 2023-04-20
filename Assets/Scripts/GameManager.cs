@@ -62,6 +62,20 @@ public class GameManager : Singleton<GameManager>
     [Tooltip("속도가 증가하는 점수")]
     public int speedIncreasePoint;
 
+    [Tooltip("상호작용 가능 상태일 때 속도")]
+    private float interactionSpd;
+    public float InteractionSpd
+    {
+        get
+        {
+            interactionSpd = score / speedIncreasePoint;
+            Mathf.Max(interactionSpd, MAXSPD);
+            return interactionSpd;
+        }
+    }
+
+    public const float MAXSPD = 50f;
+
     private int spdLevel;
     public int SpdLevel
     {
@@ -131,6 +145,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     [Tooltip("FadeOut을 위한 검정색 이미지")]
     private Image blackBoard;
+
 
     [SerializeField]
     private float fadeOutTime;
