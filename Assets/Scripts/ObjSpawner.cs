@@ -12,7 +12,24 @@ public class ObjSpawner : Singleton<ObjSpawner>
 
     public Transform spawnPos;
 
-    public bool isObjectSpawn;
+    [Tooltip("기본 속도")]
+    public const float DSPD = 10f;
+
+    [Tooltip("최고 속도")]
+    public const float MAXSPD = 35f;
+
+    [Tooltip("처음 스폰되고 떨어질 때와 틀리고 바닥으로 떨어질 때 속도")]
+    public const float FALLSPD = 30f;
+
+    private bool isObjectSpawn;
+    public bool IsObjectSpawn
+    {
+        get => isObjectSpawn;
+        set
+        {
+            isObjectSpawn = value;
+        }
+    }
 
     public float objFallingSpd;
 
@@ -28,7 +45,7 @@ public class ObjSpawner : Singleton<ObjSpawner>
 
     private void Start()
     {
-
+        AddResources();
     }
 
     /// <summary>
@@ -39,11 +56,14 @@ public class ObjSpawner : Singleton<ObjSpawner>
         int rand = Random.Range(0, 2);
         GameObject gameObject = Instantiate(originObj, spawnPos.position, Quaternion.identity);
 
+        //gameObject.transform.position = spawnPos.position;
+
         Obj obj = gameObject.GetComponent<Obj>();
 
-        obj.SetObj((EObjType)rand);
+        obj.SetObjType((EObjType)rand);
 
         int randSprite = 0;
+
         Sprite sprite;
         if (rand == 1)
         {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 public enum EButtonType
@@ -12,9 +13,11 @@ public enum EButtonType
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField]
-    private List<Image> hpUI = new List<Image>();
+    [Tooltip("HpUIs")]
+    private List<Image> hpUIList = new List<Image>();
 
     [SerializeField]
+    [Header("버튼 들")]
     [Tooltip("옆으로 넘기는 버튼")]
     private Button passBtn;
 
@@ -30,7 +33,7 @@ public class GameManager : Singleton<GameManager>
         {
             hp = value;
             UpdateHpUI();
-            if(hp <= 0)
+            if (hp <= 0)
             {
                 OnDie();
             }
@@ -40,18 +43,19 @@ public class GameManager : Singleton<GameManager>
 
     private void UpdateHpUI()
     {
-        for (int i = 0; i < hpUI.Count; i++)
+        for (int i = 0; i < hpUIList.Count; i++)
         {
-            hpUI[i].gameObject.SetActive(false);
+            hpUIList[i].gameObject.SetActive(false);
         }
 
         for (int i = 0; i < hp; i++)
         {
-            hpUI[i].gameObject.SetActive(true);
+            hpUIList[i].gameObject.SetActive(true);
         }
     }
 
     [SerializeField]
+    [Space(10f)]
     [Tooltip("속도 증가량")]
     private float spdIncrement;
 
@@ -61,8 +65,12 @@ public class GameManager : Singleton<GameManager>
     private int spdLevel;
     public int SpdLevel
     {
-        get => spdLevel;
-        set
+        get
+        {
+            spdLevel = score / (int)spdIncrement;
+            return spdLevel;
+        }
+        private set
         {
             spdLevel = value;
         }
@@ -70,15 +78,16 @@ public class GameManager : Singleton<GameManager>
 
     private float objFallingSpd;
 
-    public float ObjSFallingSpd 
+    public float ObjSFallingSpd
     {
         get
         {
             return objFallingSpd;
-
         }
     }
 
+    [SerializeField]
+    [Space(10f)]
     private int score;
     public int Score
     {
@@ -89,7 +98,16 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    [SerializeField]
+    [Tooltip("Player공격하는 모션")]
+    private GameObject playerAttackMotion;
+
+    [SerializeField]
+    [Tooltip("Player기본 모션")]
+    private GameObject playerDefaultMotion;
+
     [Tooltip("현재 떨어지고 있는 오브젝트")]
+    [Space(10f)]
     [SerializeField]
     private Obj currentFallingObj;
     public Obj CurrentFallingObj
@@ -98,12 +116,24 @@ public class GameManager : Singleton<GameManager>
         set
         {
             currentFallingObj = value;
-            if (currentFallingObj == null) 
+            if (currentFallingObj == null)
             {
                 ObjSpawner.Instance.ObjSpawn();
             }
         }
     }
+
+    [SerializeField]
+    [Space(10f)]
+    [Tooltip("게임 시작 카운드 다운을 위한 Text")]
+    private TextMeshProUGUI beginCountText;
+
+    [SerializeField]
+    [Tooltip("FadeOut을 위한 검정색 이미지")]
+    private Image blackBoard;
+
+    [SerializeField]
+    private float fadeOutTime;
 
     private bool isGameStart;
     public bool IsGameStart
@@ -121,13 +151,48 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     private void SetGame()
     {
-        ObjSpawner.Instance.isObjectSpawn = true;
-
+        ObjSpawner.Instance.ObjSpawn();
     }
 
-    void Start()
+    private void Start()
     {
         AddListener();
+        StartCoroutine(nameof(IFadeOut));
+    }
+
+    private IEnumerator IFadeOut()
+    {
+        float current = 0;
+        float percent = 0;
+
+        Color tempColor = blackBoard.color;
+
+        while(percent < 1)
+        {
+            current += Time.deltaTime;
+            percent = current / fadeOutTime;
+
+            tempColor.a = Mathf.Lerp(1, 0, percent);
+
+            blackBoard.color = tempColor;
+
+            yield return null;
+        }
+        StartCoroutine(nameof(IBeginCount));
+        yield break;
+    }
+
+    private IEnumerator IBeginCount()
+    {
+        beginCountText.gameObject.SetActive(true);
+        for (int i = 3; i > 0; i--)
+        {
+            beginCountText.text = $"{i}";
+            yield return new WaitForSeconds(1f);
+        }
+        beginCountText.gameObject.SetActive(false);
+
+        IsGameStart = true;
     }
 
     /// <summary>
@@ -160,15 +225,16 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void PressBreakBtn()
     {
+        StartCoroutine(nameof(IAttackMotion));
         if (currentFallingObj == null) return;
         FallingObjControl(EButtonType.Break);
     }
 
     private void FallingObjControl(EButtonType type)
     {
-        if(type == EButtonType.Pass)
+        if (type == EButtonType.Pass)
         {
-            if(CheckCurrentFallingObj() == EObjType.Other)
+            if (GetCurrentFallingObj() == EObjType.Other)
             {
                 Pass();
             }
@@ -177,9 +243,9 @@ public class GameManager : Singleton<GameManager>
                 Drop();
             }
         }
-        else if(type == EButtonType.Break)
+        else if (type == EButtonType.Break)
         {
-            if(CheckCurrentFallingObj() == EObjType.Other)
+            if (GetCurrentFallingObj() == EObjType.Other)
             {
                 Drop();
             }
@@ -190,25 +256,38 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    /// <summary>
+    /// 옆으로 넘겨야 할 때 오브젝트 상태를 pass로 바꿔줌
+    /// </summary>
     public void Pass()
     {
         currentFallingObj.State = EObjState.Pass;
         currentFallingObj = null;
     }
 
+    /// <summary>
+    /// 부숴야 할 때 오브젝트 상태를 break로 바꿔줌
+    /// </summary>
     public void Break()
     {
         currentFallingObj.State = EObjState.Break;
         currentFallingObj = null;
     }
 
+    /// <summary>
+    /// 떨어뜨려야 할 때 오브젝트의 상태를 Drop으로 바꿔줌
+    /// </summary>
     public void Drop()
     {
         currentFallingObj.State = EObjState.Drop;
         currentFallingObj = null;
     }
 
-    private EObjType CheckCurrentFallingObj()
+    /// <summary>
+    /// 현재 떨어지고 있는 오브젝트의 Type을 받아옴
+    /// </summary>
+    /// <returns></returns>
+    private EObjType GetCurrentFallingObj()
     {
         EObjType type = currentFallingObj.type;
         return type;
@@ -220,8 +299,27 @@ public class GameManager : Singleton<GameManager>
 
     }
 
+    /// <summary>
+    /// 공격모션
+    /// </summary>
+    private void AttackMotion()
+    {
+        StartCoroutine(nameof(IAttackMotion));
+    }
+
+    private IEnumerator IAttackMotion()
+    {
+        playerAttackMotion.SetActive(true);
+        playerDefaultMotion.SetActive(false);
+
+        yield return new WaitForSeconds(0.1f);
+
+        playerAttackMotion.SetActive(false);
+        playerDefaultMotion.SetActive(true);
+    }
+
     private void OnDie()
     {
-        
+
     }
 }

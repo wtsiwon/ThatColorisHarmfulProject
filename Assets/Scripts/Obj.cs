@@ -24,20 +24,12 @@ public class Obj : MonoBehaviour
     [Tooltip("현재 속도")]
     public float spd;
 
-    [Tooltip("기본 속도")]
-    public const float DSPD = 10f;
-
-    [Tooltip("최고 속도")]
-    public const float MAXSPD = 35f;
-
-    [Tooltip("처음 스폰되고 떨어질 때와 틀리고 바닥으로 떨어질 때 속도")]
-    public const float FALLSPD = 30f;
-
-    
+    [Tooltip("이 오브젝트의 시간(1이 원래 속도)")]
+    public float timeScale = 1;
 
     [SerializeField]
     [Tooltip("오브젝트의 상태")]
-    private EObjState state;
+    private EObjState state = EObjState.FallDown;
     public EObjState State
     {
         get => state;
@@ -52,14 +44,19 @@ public class Obj : MonoBehaviour
     /// Obj 세팅함수
     /// </summary>
     /// <param name="type"></param>
-    public void SetObj(EObjType type)
+    public void SetObjType(EObjType type)
     {
         this.type = type;
     }
 
+    [HideInInspector]
     public Vector3 dir = Vector3.down;
 
-    void Update()
+    private void Start()
+    {
+        
+    }
+    private void Update()
     {
         Move();
     }
@@ -78,7 +75,6 @@ public class Obj : MonoBehaviour
             case EObjState.Slow:
                 
                 break;
-
             case EObjState.Pass:
 
                 break;
@@ -94,11 +90,9 @@ public class Obj : MonoBehaviour
         }
     }
 
-
-
     private void Move()
     {
-        transform.position = dir * spd * Time.deltaTime;
+        transform.position += dir * spd * Time.deltaTime * timeScale;
     }
 
     public void Return()
