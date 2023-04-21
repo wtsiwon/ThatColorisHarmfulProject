@@ -78,11 +78,28 @@ public class Obj : MonoBehaviour
     private void Update()
     {
         Move();
+        ObjState();
+        DestroyObj();
     }
 
     private void DestroyObj()
     {
+        Vector3 currentpos = transform.position;
+        if(currentpos.y < downDestroyPositionY)
+        {
+            GameManager.Instance.CurrentFallingObj = null;
+            GameManager.Instance.Hp -= 1;
 
+            Destroy(gameObject);
+        }
+
+        else if(currentpos.x < rightDestroyPositionX)
+        {
+            GameManager.Instance.CurrentFallingObj = null;
+            GameManager.Instance.Hp -= 1;
+
+            Destroy(gameObject);
+        }
     }
 
     private void ObjState()
