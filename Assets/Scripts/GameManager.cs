@@ -63,6 +63,7 @@ public class GameManager : Singleton<GameManager>
     public int speedIncreasePoint;
 
     [Tooltip("상호작용 가능 상태일 때 속도")]
+    [SerializeField]
     private float interactionSpd;
     public float InteractionSpd
     {

@@ -27,24 +27,24 @@ public class Obj : MonoBehaviour
     [Tooltip("이 오브젝트의 시간(1이 원래 속도)")]
     public float timeScale = 1;
 
-    [SerializeField]
     [Tooltip("상호작용이 가능해지는 포지션 Y값")]
+    [SerializeField]
     private float interactionPossiblePositionY;
 
-    [SerializeField]
     [Tooltip("상호작용이 끝나는 포지션 Y값")]
+    [SerializeField]
     private float interactionEndPositionY;
 
-    [SerializeField]
     [Tooltip("아래쪽 파괴 Y Position")]
+    [SerializeField]
     private float downDestroyPositionY;
 
-    [SerializeField]
     [Tooltip("오른쪽 파괴 X Position")]
+    [SerializeField]
     private float rightDestroyPositionX;
 
-    [SerializeField]
     [Tooltip("오브젝트의 상태")]
+    [SerializeField]
     private EObjState state = EObjState.FallDown;
     public EObjState State
     {
@@ -109,6 +109,7 @@ public class Obj : MonoBehaviour
         float currentPosY = transform.position.y;
         if (currentPosY < interactionPossiblePositionY && currentPosY > interactionEndPositionY)
         {
+            State = EObjState.Slow;
             GameManager.Instance.CurrentFallingObj = this;
         }
         else if(currentPosY < interactionEndPositionY)

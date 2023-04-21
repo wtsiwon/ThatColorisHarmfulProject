@@ -2057,6 +2057,7 @@ MonoBehaviour:
   breakBtn: {fileID: 918041409}
   spdIncrement: 1
   speedIncreasePoint: 10000
+  interactionSpd: 5
   score: 0
   playerAttackMotion: {fileID: 316979613}
   playerDefaultMotion: {fileID: 1120368613}
