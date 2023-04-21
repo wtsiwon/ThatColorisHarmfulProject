@@ -112,16 +112,19 @@ public class Obj : MonoBehaviour
                 dir = Vector3.down;
                 break;
             case EObjState.Slow:
-                spd = GameManager.Instance.= InteractionSpd;
+                spd = GameManager.Instance.InteractionSpd;
                 break;
             case EObjState.Pass:
-
+                dir = Vector3.right;
+                spd = GameManager.Instance.ObjSFallingSpd;
                 break;
             case EObjState.Drop:
-
+                spd = GameManager.Instance.ObjSFallingSpd;
+                GameManager.Instance.CurrentFallingObj = null;
                 break;
             case EObjState.Break:
-
+                GameManager.Instance.CurrentFallingObj = null;
+                Destroy(gameObject);
                 break;
             default:
                 Debug.Assert(false, "어..? 여기 오면 안돼는디");
@@ -134,8 +137,8 @@ public class Obj : MonoBehaviour
         transform.position += dir * spd * Time.deltaTime * timeScale;
     }
 
-    public void Return()
+    public void CameraShake(float time, float range) 
     {
-        ObjPool.Instance.Return(this);
+        
     }
 }
