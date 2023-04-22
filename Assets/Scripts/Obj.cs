@@ -73,19 +73,33 @@ public class Obj : MonoBehaviour
     private void Start()
     {
         SetObj(EObjType.Green, 10);
+        StartCoroutine(nameof(IUpdate));
     }
-    
+
+    private IEnumerator IUpdate()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.5f);
+            print(spd);
+
+
+        }
+    }
+
     private void Update()
     {
         Move();
-        ObjState();
         DestroyObj();
     }
 
+    /// <summary>
+    /// 오브젝트가 자동으로 부서지는 조건
+    /// </summary>
     private void DestroyObj()
     {
         Vector3 currentpos = transform.position;
-        if(currentpos.y < downDestroyPositionY)
+        if (currentpos.y < downDestroyPositionY)
         {
             GameManager.Instance.CurrentFallingObj = null;
             GameManager.Instance.Hp -= 1;
@@ -93,7 +107,7 @@ public class Obj : MonoBehaviour
             Destroy(gameObject);
         }
 
-        else if(currentpos.x < rightDestroyPositionX)
+        if (currentpos.x < rightDestroyPositionX)
         {
             GameManager.Instance.CurrentFallingObj = null;
             GameManager.Instance.Hp -= 1;
@@ -102,9 +116,12 @@ public class Obj : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 오브젝트 상태 변경
+    /// </summary>
     private void ObjState()
     {
-        if (GameManager.Instance.CurrentFallingObj == null) return;
+        //if (GameManager.Instance.CurrentFallingObj != null) return;
 
         float currentPosY = transform.position.y;
         if (currentPosY < interactionPossiblePositionY && currentPosY > interactionEndPositionY)
@@ -112,7 +129,7 @@ public class Obj : MonoBehaviour
             State = EObjState.Slow;
             GameManager.Instance.CurrentFallingObj = this;
         }
-        else if(currentPosY < interactionEndPositionY)
+        else if (currentPosY < interactionEndPositionY)
         {
             State = EObjState.Drop;
             GameManager.Instance.CurrentFallingObj = null;
@@ -155,8 +172,8 @@ public class Obj : MonoBehaviour
         transform.position += dir * spd * Time.deltaTime * timeScale;
     }
 
-    public void CameraShake(float time, float range) 
+    public void CameraShake(float time, float range)
     {
-        
+
     }
 }

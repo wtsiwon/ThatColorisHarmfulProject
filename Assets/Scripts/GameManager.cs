@@ -70,27 +70,18 @@ public class GameManager : Singleton<GameManager>
         get
         {
             interactionSpd = score / speedIncreasePoint;
-            Mathf.Max(interactionSpd, MAXSPD);
+            interactionSpd = Mathf.Clamp(interactionSpd, MINSPD, MAXSPD);
+
             return interactionSpd;
         }
     }
 
     public const float MAXSPD = 50f;
 
-    private int spdLevel;
-    public int SpdLevel
-    {
-        get
-        {
-            spdLevel = score / (int)spdIncrement;
-            return spdLevel;
-        }
-        private set
-        {
-            spdLevel = value;
-        }
-    }
+    public const float MINSPD = 5f;
 
+    [SerializeField]
+    [Tooltip("오브젝트 상호작용 상태가 아닐 때 속도")]
     private float objFallingSpd;
 
     public float ObjSFallingSpd
@@ -130,6 +121,7 @@ public class GameManager : Singleton<GameManager>
         get => currentFallingObj;
         set
         {
+            if (value == null && currentFallingObj == null) return;
             currentFallingObj = value;
             if (currentFallingObj == null)
             {
@@ -174,6 +166,20 @@ public class GameManager : Singleton<GameManager>
     {
         AddListener();
         StartCoroutine(nameof(IFadeOut));
+        StartCoroutine(nameof(IUpdate));
+    }
+
+    /// <summary>
+    /// 여러가지 확인 하기 위해 만든 코루틴
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator IUpdate()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(0.5f);
+            print(currentFallingObj);
+        }
     }
 
     private IEnumerator IFadeOut()
@@ -312,7 +318,19 @@ public class GameManager : Singleton<GameManager>
 
     void Update()
     {
+        ComputerInputKey();
+    }
 
+    private void ComputerInputKey()
+    {
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            PressPassBtn();
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            PressBreakBtn();
+        }
     }
 
     /// <summary>
