@@ -112,23 +112,6 @@ public class GameManager : Singleton<GameManager>
     [Tooltip("Player기본 모션")]
     private GameObject playerDefaultMotion;
 
-    [Tooltip("현재 떨어지고 있는 오브젝트")]
-    [Space(10f)]
-    [SerializeField]
-    private Obj currentFallingObj;
-    public Obj CurrentFallingObj
-    {
-        get => currentFallingObj;
-        set
-        {
-            if (value == null && currentFallingObj == null) return;
-            currentFallingObj = value;
-            if (currentFallingObj == null)
-            {
-                ObjSpawner.Instance.ObjSpawn();
-            }
-        }
-    }
 
     [SerializeField]
     [Space(10f)]
@@ -178,7 +161,6 @@ public class GameManager : Singleton<GameManager>
         while (true)
         {
             yield return new WaitForSeconds(0.5f);
-            print(currentFallingObj);
         }
     }
 
@@ -238,7 +220,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void PressPassBtn()
     {
-        if (currentFallingObj == null) return;
+        if (ObjSpawner.Instance.CheckObjQueue() == false) return;
         FallingObjControl(EButtonType.Pass);
     }
 
@@ -248,7 +230,7 @@ public class GameManager : Singleton<GameManager>
     public void PressBreakBtn()
     {
         StartCoroutine(nameof(IAttackMotion));
-        if (currentFallingObj == null) return;
+        if (ObjSpawner.Instance.CheckObjQueue() == false) return;
         FallingObjControl(EButtonType.Break);
     }
 
@@ -283,8 +265,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void Pass()
     {
-        currentFallingObj.State = EObjState.Pass;
-        currentFallingObj = null;
+        Obj obj = ObjSpawner.Instance.objQueue.Dequeue();
+        obj.State = EObjState.Pass;
     }
 
     /// <summary>
@@ -292,8 +274,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void Break()
     {
-        currentFallingObj.State = EObjState.Break;
-        currentFallingObj = null;
+        Obj obj = ObjSpawner.Instance.objQueue.Dequeue();
+        obj.State = EObjState.Break;
     }
 
     /// <summary>
@@ -301,8 +283,8 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void Drop()
     {
-        currentFallingObj.State = EObjState.Drop;
-        currentFallingObj = null;
+        Obj obj = ObjSpawner.Instance.objQueue.Dequeue();
+        obj.State = EObjState.Drop;
     }
 
     /// <summary>
@@ -311,7 +293,7 @@ public class GameManager : Singleton<GameManager>
     /// <returns></returns>
     private EObjType GetCurrentFallingObj()
     {
-        EObjType type = currentFallingObj.type;
+        EObjType type = ObjSpawner.Instance.objQueue.Peek().type;
         return type;
     }
 

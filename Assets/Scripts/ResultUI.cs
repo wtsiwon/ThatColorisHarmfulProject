@@ -19,12 +19,12 @@ public class ResultUI : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.Instance.CurrentFallingObj.timeScale = 0;
+        Time.timeScale = 0.1f;
     }
 
     private void OnDisable()
     {
-        GameManager.Instance.CurrentFallingObj.timeScale = 1;
+        Time.timeScale = 1f;
     }
 
     private void AddListener()

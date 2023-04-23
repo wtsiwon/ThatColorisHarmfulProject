@@ -81,8 +81,6 @@ public class Obj : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(0.5f);
-            print(spd);
-
 
         }
     }
@@ -90,50 +88,6 @@ public class Obj : MonoBehaviour
     private void Update()
     {
         Move();
-        DestroyObj();
-    }
-
-    /// <summary>
-    /// 오브젝트가 자동으로 부서지는 조건
-    /// </summary>
-    private void DestroyObj()
-    {
-        Vector3 currentpos = transform.position;
-        if (currentpos.y < downDestroyPositionY)
-        {
-            GameManager.Instance.CurrentFallingObj = null;
-            GameManager.Instance.Hp -= 1;
-
-            Destroy(gameObject);
-        }
-
-        if (currentpos.x < rightDestroyPositionX)
-        {
-            GameManager.Instance.CurrentFallingObj = null;
-            GameManager.Instance.Hp -= 1;
-
-            Destroy(gameObject);
-        }
-    }
-
-    /// <summary>
-    /// 오브젝트 상태 변경
-    /// </summary>
-    private void ObjState()
-    {
-        //if (GameManager.Instance.CurrentFallingObj != null) return;
-
-        float currentPosY = transform.position.y;
-        if (currentPosY < interactionPossiblePositionY && currentPosY > interactionEndPositionY)
-        {
-            State = EObjState.Slow;
-            GameManager.Instance.CurrentFallingObj = this;
-        }
-        else if (currentPosY < interactionEndPositionY)
-        {
-            State = EObjState.Drop;
-            GameManager.Instance.CurrentFallingObj = null;
-        }
     }
 
     /// <summary>
@@ -155,10 +109,8 @@ public class Obj : MonoBehaviour
                 break;
             case EObjState.Drop:
                 spd = GameManager.Instance.ObjSFallingSpd;
-                GameManager.Instance.CurrentFallingObj = null;
                 break;
             case EObjState.Break:
-                GameManager.Instance.CurrentFallingObj = null;
                 Destroy(gameObject);
                 break;
             default:
@@ -172,8 +124,20 @@ public class Obj : MonoBehaviour
         transform.position += dir * spd * Time.deltaTime * timeScale;
     }
 
-    public void CameraShake(float time, float range)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.CompareTag("CheckBox"))
+        {
+            State = EObjState.Slow;
+        }
+    }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("CheckBox"))
+        {
+            if (State == EObjState.Pass) return;
+            State = EObjState.Drop;
+        }
     }
 }
