@@ -88,6 +88,15 @@ public class Obj : MonoBehaviour
     private void Update()
     {
         Move();
+        DestroyObj();
+    }
+
+    private void DestroyObj()
+    {
+        if(downDestroyPositionY > transform.position.y)
+        {
+            Destroy(gameObject);
+        }
     }
 
     /// <summary>
@@ -95,6 +104,7 @@ public class Obj : MonoBehaviour
     /// </summary>
     private void MovementOnTheState()
     {
+        if (state == EObjState.Drop || state == EObjState.Pass) return;
         switch (state)
         {
             case EObjState.FallDown:
