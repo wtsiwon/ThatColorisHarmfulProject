@@ -28,8 +28,11 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 
     private void Awake()
     {
+        if (instance != null && instance != this) Destroy(gameObject);
+
         instance = GetComponent<T>();
-        if(dontDestroyOnLoad == true)
+
+        if (dontDestroyOnLoad == true)
         {
             DontDestroyOnLoad(gameObject);
         }

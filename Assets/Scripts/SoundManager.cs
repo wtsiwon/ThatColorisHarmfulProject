@@ -18,12 +18,18 @@ public class SoundManager : Singleton<SoundManager>
     [Tooltip("사운드 담는 Dictionary")]
     private Dictionary<string, AudioClip> soundDic = new Dictionary<string, AudioClip>();
 
+    [Tooltip("현재 실행중인 오디오")]
+    private List<AudioSource> audios = new List<AudioSource>();
+
     private void Start()
     {
         LoadSound();
         Play(ESoundType.BGM, "BGM_Title", 0.5f);
     }
 
+    /// <summary>
+    /// 사운드 가져오기
+    /// </summary>
     private void LoadSound()
     {
         AudioClip[] bgmClips = Resources.LoadAll<AudioClip>("Sound/BGM");
@@ -49,7 +55,7 @@ public class SoundManager : Singleton<SoundManager>
         }
     }
 
-    public void Play(ESoundType type, string name, float volume, float pitch = 1)
+    public void Play(ESoundType type, string name, float volume = 0.5f, float pitch = 1)
     {
         GameObject audioSourceObj = CreateSoundObject(type, name);
 
@@ -74,9 +80,33 @@ public class SoundManager : Singleton<SoundManager>
         {
             obj.GetComponent<AudioSource>().loop = false;
         }
+
+        audios.Add(obj.GetComponent<AudioSource>());
+
         return obj;
     }
 
+    /// <summary>
+    /// 현재 실행중인 오디오 음소거
+    /// </summary>
+    /// <param name="mute"></param>
+    public void Mute(bool mute)
+    {
+        if (audios.Count == 0) return;
 
+        if (mute == true)
+        {
+            audios.ForEach(item => item.volume = 0);
+        }
+        else
+        {
+            audios.ForEach(item => item.volume = 0.5f);
+        }
+    }
+
+    public void DestroyMusic()
+    {
+        
+    }
 
 }

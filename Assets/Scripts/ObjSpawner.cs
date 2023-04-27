@@ -18,9 +18,6 @@ public class ObjSpawner : Singleton<ObjSpawner>
 
     public float spawnInterval;
 
-    [Tooltip("소환한 오브젝트를 담을 Queue")]
-    public Queue<Obj> objQueue = new Queue<Obj>();
-
     private void Awake()
     {
         AddResources();
@@ -34,7 +31,7 @@ public class ObjSpawner : Singleton<ObjSpawner>
     private void Start()
     {
         AddResources();
-        StartCoroutine(nameof(ISpawn));
+        //StartCoroutine(nameof(ISpawn));
     }
 
     private IEnumerator ISpawn()
@@ -74,7 +71,7 @@ public class ObjSpawner : Singleton<ObjSpawner>
 
         Sprite sprite;
 
-        if (rand == 1)
+        if (rand == 0)
         {
             randSprite = Random.Range(0, greenObjects.Length);
             sprite = greenObjects[randSprite];
@@ -85,10 +82,9 @@ public class ObjSpawner : Singleton<ObjSpawner>
             sprite = otherObjects[randSprite];
         }
 
+        obj.spd = GameManager.Instance.ObjSFallingSpd;
         gameObject.GetComponent<SpriteRenderer>().sprite = sprite;
         obj.transform.localScale = SpriteResizing(sprite);
-
-        objQueue.Enqueue(obj);
     }
 
     private Vector3 SpriteResizing(Sprite sprite)
@@ -99,10 +95,5 @@ public class ObjSpawner : Singleton<ObjSpawner>
 
         scale = new Vector3(150 / x, 150 / y, 1);
         return scale;
-    }
-
-    public bool CheckObjQueue()
-    {
-        return objQueue.Count > 0;
     }
 }

@@ -72,7 +72,6 @@ public class Obj : MonoBehaviour
 
     private void Start()
     {
-        SetObj(EObjType.Green, 10);
         StartCoroutine(nameof(IUpdate));
     }
 
@@ -97,6 +96,10 @@ public class Obj : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        else if(rightDestroyPositionX > transform.position.x)
+        {
+            Destroy(gameObject);
+        }
     }
 
     /// <summary>
@@ -104,23 +107,27 @@ public class Obj : MonoBehaviour
     /// </summary>
     private void MovementOnTheState()
     {
-        if (state == EObjState.Drop || state == EObjState.Pass) return;
         switch (state)
         {
             case EObjState.FallDown:
                 dir = Vector3.down;
+                spd = GameManager.Instance.ObjSFallingSpd;
                 break;
             case EObjState.Slow:
                 spd = GameManager.Instance.InteractionSpd;
+                GameManager.Instance.CurrentFallingObj = this;
                 break;
             case EObjState.Pass:
-                dir = Vector3.right;
+                dir = Vector3.left;
                 spd = GameManager.Instance.ObjSFallingSpd;
+                GameManager.Instance.CurrentFallingObj = null;
                 break;
             case EObjState.Drop:
                 spd = GameManager.Instance.ObjSFallingSpd;
+                GameManager.Instance.CurrentFallingObj = null;
                 break;
             case EObjState.Break:
+                GameManager.Instance.CurrentFallingObj = null;
                 Destroy(gameObject);
                 break;
             default:
@@ -133,7 +140,7 @@ public class Obj : MonoBehaviour
     {
         transform.position += dir * spd * Time.deltaTime * timeScale;
     }
-
+    float time;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("CheckBox"))
@@ -142,12 +149,19 @@ public class Obj : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        time += Time.deltaTime;
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("CheckBox"))
         {
-            if (State == EObjState.Pass) return;
+            if (State == EObjState.Pass || GameManager.Instance.CurrentFallingObj == null) return;
+            GameManager.Instance.Hp -= 1;
             State = EObjState.Drop;
         }
+        print(time);
     }
 }

@@ -52,6 +52,7 @@ public class SettingUI : MonoBehaviour
             int temp = onMusic == true ? 1 : 0;
             PlayerPrefs.SetInt("MusicON", temp);
             musicMuteBtn.GetComponent<Image>().sprite = musicBtnSpriteList[temp];
+            SoundManager.Instance.Mute(OnMusic);
         }
     }
 
@@ -74,6 +75,7 @@ public class SettingUI : MonoBehaviour
             int temp = onSFX == true ? 1 : 0;
             PlayerPrefs.SetInt("SFXON", temp);
             SFXMuteBtn.GetComponent<Image>().sprite = SFXBtnSpriteList[temp];
+            SoundManager.Instance.Mute(onSFX);
         }
     }
 

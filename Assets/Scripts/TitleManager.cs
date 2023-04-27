@@ -43,7 +43,7 @@ public class TitleManager : MonoBehaviour
             settingBoard.SetActive(true);
         });
 
-        highScore.text = string.Format("{0:#,##0}", PlayerPrefs.GetInt("Score", 0));
+        highScore.text = string.Format("{0:#,##0}", PlayerPrefs.GetInt("HighScore", 0));
     }
 
     private IEnumerator IGoInGame()

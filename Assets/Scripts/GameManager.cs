@@ -16,8 +16,8 @@ public class GameManager : Singleton<GameManager>
     [Tooltip("HpUIs")]
     private List<Image> hpUIList = new List<Image>();
 
-    [SerializeField]
     [Header("버튼 들")]
+    [SerializeField]
     [Tooltip("옆으로 넘기는 버튼")]
     private Button passBtn;
 
@@ -25,19 +25,42 @@ public class GameManager : Singleton<GameManager>
     [Tooltip("물건 부수는 버튼")]
     private Button breakBtn;
 
-    private int hp;
+    [SerializeField]
+    [Tooltip("결과 창")]
+    private ResultUI resultboard;
+
+    [SerializeField]
+    [Tooltip("남은 시간")]
+    private Slider limitTimeBar;
+
+    [SerializeField]
+    [Tooltip("현재 떨어진고 있는 오브젝트")]
+    private Obj currentFallingObj;
+    public Obj CurrentFallingObj
+    {
+        get => currentFallingObj;
+        set
+        {
+            currentFallingObj = value;
+            if (currentFallingObj == null && isGameStart == true)
+            {
+                ObjSpawner.Instance.ObjSpawn();
+            }
+        }
+    }
+
+    private int hp = 3;
     public int Hp
     {
         get => hp;
         set
         {
             hp = value;
-            UpdateHpUI();
             if (hp <= 0)
             {
                 OnDie();
             }
-
+            UpdateHpUI();
         }
     }
 
@@ -76,9 +99,9 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public const float MAXSPD = 50f;
+    public const float MAXSPD = 7f;
 
-    public const float MINSPD = 5f;
+    public const float MINSPD = 2f;
 
     [SerializeField]
     [Tooltip("오브젝트 상호작용 상태가 아닐 때 속도")]
@@ -93,6 +116,11 @@ public class GameManager : Singleton<GameManager>
     }
 
     [SerializeField]
+    private TextMeshProUGUI scoreText;
+
+    public int scoreIncrement;
+
+    [SerializeField]
     [Space(10f)]
     private int score;
     public int Score
@@ -101,6 +129,8 @@ public class GameManager : Singleton<GameManager>
         set
         {
             score = value;
+            scoreText.text = string.Format("{0:#,##0}", score);
+            PlayerPrefs.SetInt("Score", score);
         }
     }
 
@@ -150,6 +180,7 @@ public class GameManager : Singleton<GameManager>
         AddListener();
         StartCoroutine(nameof(IFadeOut));
         StartCoroutine(nameof(IUpdate));
+        SoundManager.Instance.Play(ESoundType.BGM, "BGM_Ingame");
     }
 
     /// <summary>
@@ -171,7 +202,7 @@ public class GameManager : Singleton<GameManager>
 
         Color tempColor = blackBoard.color;
 
-        while(percent < 1)
+        while (percent < 1)
         {
             current += Time.deltaTime;
             percent = current / fadeOutTime;
@@ -220,7 +251,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void PressPassBtn()
     {
-        if (ObjSpawner.Instance.CheckObjQueue() == false) return;
+        if (currentFallingObj == null) return;
         FallingObjControl(EButtonType.Pass);
     }
 
@@ -230,7 +261,7 @@ public class GameManager : Singleton<GameManager>
     public void PressBreakBtn()
     {
         StartCoroutine(nameof(IAttackMotion));
-        if (ObjSpawner.Instance.CheckObjQueue() == false) return;
+        if (currentFallingObj == null) return;
         FallingObjControl(EButtonType.Break);
     }
 
@@ -241,10 +272,12 @@ public class GameManager : Singleton<GameManager>
             if (GetCurrentFallingObj() == EObjType.Other)
             {
                 Pass();
+                Score += scoreIncrement;
             }
             else
             {
                 Drop();
+                Hp -= 1;
             }
         }
         else if (type == EButtonType.Break)
@@ -252,10 +285,12 @@ public class GameManager : Singleton<GameManager>
             if (GetCurrentFallingObj() == EObjType.Other)
             {
                 Drop();
+                Hp -= 1;
             }
             else
             {
                 Break();
+                Score += scoreIncrement;
             }
         }
     }
@@ -265,7 +300,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void Pass()
     {
-        Obj obj = ObjSpawner.Instance.objQueue.Dequeue();
+        Obj obj = currentFallingObj;
         obj.State = EObjState.Pass;
     }
 
@@ -274,7 +309,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void Break()
     {
-        Obj obj = ObjSpawner.Instance.objQueue.Dequeue();
+        Obj obj = currentFallingObj;
         obj.State = EObjState.Break;
     }
 
@@ -283,7 +318,7 @@ public class GameManager : Singleton<GameManager>
     /// </summary>
     public void Drop()
     {
-        Obj obj = ObjSpawner.Instance.objQueue.Dequeue();
+        Obj obj = currentFallingObj;
         obj.State = EObjState.Drop;
     }
 
@@ -293,7 +328,7 @@ public class GameManager : Singleton<GameManager>
     /// <returns></returns>
     private EObjType GetCurrentFallingObj()
     {
-        EObjType type = ObjSpawner.Instance.objQueue.Peek().type;
+        EObjType type = currentFallingObj.type;
         return type;
     }
 
@@ -302,7 +337,10 @@ public class GameManager : Singleton<GameManager>
     {
         ComputerInputKey();
     }
-
+    private void SetLimitTimeBar()
+    {
+        
+    }
     private void ComputerInputKey()
     {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
@@ -334,8 +372,19 @@ public class GameManager : Singleton<GameManager>
         playerDefaultMotion.SetActive(true);
     }
 
+    /// <summary>
+    /// 죽었을 때
+    /// </summary>
     private void OnDie()
     {
+        if (PlayerPrefs.GetInt("HighScore", 0) <= PlayerPrefs.GetInt("Score", 0))
+        {
+            PlayerPrefs.SetInt("HighScore", PlayerPrefs.GetInt("Score", 0));
+        }
 
+        PlayerPrefs.SetInt("Score", score);
+
+        resultboard.SetResultBoard();
+        isGameStart = false;
     }
 }
