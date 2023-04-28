@@ -614,7 +614,7 @@ RectTransform:
   - {fileID: 962496479}
   - {fileID: 1514475389}
   m_Father: {fileID: 1773873002}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
@@ -651,7 +651,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1773873002}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -687,8 +687,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -705,13 +705,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 150
-  m_fontSizeBase: 150
+  m_fontSize: 300
+  m_fontSizeBase: 300
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1351,7 +1351,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1773873002}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1485,7 +1485,7 @@ RectTransform:
   - {fileID: 2114100698}
   - {fileID: 918041408}
   m_Father: {fileID: 1773873002}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1808,7 +1808,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1773873002}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2176,7 +2176,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -1152}
+  m_AnchoredPosition: {x: 0, y: -1600}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1633981549
@@ -2193,7 +2193,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   goTitle: {fileID: 142734045}
   resultScoreText: {fileID: 1511093888}
-  startPosition: {x: 0, y: -1200, z: 0}
+  startPosition: {x: 0, y: -1600, z: 0}
   targetPosition: {x: 0, y: 0, z: 0}
   moveTime: 1.5
 --- !u!1 &1762140081
@@ -2362,12 +2362,12 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 1106991770}
   - {fileID: 413182296}
   - {fileID: 1926281112}
   - {fileID: 1082193208}
   - {fileID: 429086688}
   - {fileID: 1375463757}
+  - {fileID: 1106991770}
   - {fileID: 1633981548}
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -2661,7 +2661,7 @@ RectTransform:
   - {fileID: 1252222562}
   - {fileID: 1303305635}
   m_Father: {fileID: 1773873002}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2838,6 +2838,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
+  cam: {fileID: 1153914343}
   hpUIList:
   - {fileID: 1820687289}
   - {fileID: 962496480}
@@ -2845,8 +2846,9 @@ MonoBehaviour:
   passBtn: {fileID: 2114100699}
   breakBtn: {fileID: 918041409}
   resultboard: {fileID: 1633981549}
-  limitTimeBar: {fileID: 0}
   currentFallingObj: {fileID: 0}
+  cameraShakeTime: 0.25
+  cameraShakeRange: 0.1
   spdIncrement: 1
   speedIncreasePoint: 20000
   interactionSpd: 2

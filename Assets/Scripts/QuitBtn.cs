@@ -16,6 +16,7 @@ public class QuitBtn : MonoBehaviour
         btn.onClick.AddListener(() =>
         {
             quitObject.SetActive(false);
+            SoundManager.Instance.Play(ESoundType.SFX, "SFX_Button_Click");
         });
     }
 

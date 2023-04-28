@@ -13,6 +13,9 @@ public enum EButtonType
 public class GameManager : Singleton<GameManager>
 {
     [SerializeField]
+    private Camera cam;
+
+    [SerializeField]
     [Tooltip("HpUIs")]
     private List<Image> hpUIList = new List<Image>();
 
@@ -28,10 +31,6 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     [Tooltip("결과 창")]
     private ResultUI resultboard;
-
-    [SerializeField]
-    [Tooltip("남은 시간")]
-    private Slider limitTimeBar;
 
     [SerializeField]
     [Tooltip("현재 떨어진고 있는 오브젝트")]
@@ -60,6 +59,8 @@ public class GameManager : Singleton<GameManager>
             {
                 OnDie();
             }
+            CameraShake(cameraShakeTime, cameraShakeRange);
+            SoundManager.Instance.Play(ESoundType.SFX, "SFX_Narack");
             UpdateHpUI();
         }
     }
@@ -77,6 +78,16 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    [SerializeField]
+    [Tooltip("얼마나 오래 흔들릴것인가")]
+    private float cameraShakeTime;
+
+    [SerializeField]
+    [Tooltip("얼마나 넓게 흔들릴것인가")]
+    private float cameraShakeRange;
+
+
+    [Header("속도")]
     [SerializeField]
     [Space(10f)]
     [Tooltip("속도 증가량")]
@@ -302,6 +313,7 @@ public class GameManager : Singleton<GameManager>
     {
         Obj obj = currentFallingObj;
         obj.State = EObjState.Pass;
+        SoundManager.Instance.Play(ESoundType.SFX, "SFX_Numgigi", 0.8f);
     }
 
     /// <summary>
@@ -311,6 +323,8 @@ public class GameManager : Singleton<GameManager>
     {
         Obj obj = currentFallingObj;
         obj.State = EObjState.Break;
+        CameraShake(cameraShakeTime, cameraShakeRange);
+        SoundManager.Instance.Play(ESoundType.SFX, "SFX_Attack");
     }
 
     /// <summary>
@@ -336,10 +350,6 @@ public class GameManager : Singleton<GameManager>
     void Update()
     {
         ComputerInputKey();
-    }
-    private void SetLimitTimeBar()
-    {
-        
     }
     private void ComputerInputKey()
     {
@@ -385,6 +395,37 @@ public class GameManager : Singleton<GameManager>
         PlayerPrefs.SetInt("Score", score);
 
         resultboard.SetResultBoard();
+        SoundManager.Instance.Play(ESoundType.SFX, "SFX_Game_Over");
         isGameStart = false;
+    }
+
+    public void CameraShake(float time, float range)
+    {
+        StartCoroutine(ICameraShake(time, range));
+    }
+
+    private IEnumerator ICameraShake(float time, float range)
+    {
+        float current = 0;
+        float percent = 0;
+
+        Vector3 defaultCameraPos = new Vector3(0, 0, -10);
+
+        while (percent < 1)
+        {
+            current += Time.deltaTime;
+            percent = current / time;
+
+            Vector3 shakePos = Random.insideUnitCircle * range;
+            shakePos.z = -10;
+
+            cam.transform.position = shakePos;
+
+
+            yield return null;
+            cam.transform.position = defaultCameraPos;
+        }
+        cam.transform.position = defaultCameraPos;
+        yield break;
     }
 }

@@ -79,6 +79,7 @@ public class SoundManager : Singleton<SoundManager>
         else
         {
             obj.GetComponent<AudioSource>().loop = false;
+            Destroy(obj, 1f);
         }
 
         audios.Add(obj.GetComponent<AudioSource>());

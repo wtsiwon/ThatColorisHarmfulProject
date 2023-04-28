@@ -31,6 +31,7 @@ public class ResultUI : MonoBehaviour
         goTitle.onClick.AddListener(() =>
         {
             SceneManager.LoadScene("Title");
+            
         });
     }
 

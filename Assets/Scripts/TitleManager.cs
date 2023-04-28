@@ -41,9 +41,11 @@ public class TitleManager : MonoBehaviour
         settingBtn.onClick.AddListener(() =>
         {
             settingBoard.SetActive(true);
+            SoundManager.Instance.Play(ESoundType.SFX, "SFX_Button_Click");
         });
 
         highScore.text = string.Format("{0:#,##0}", PlayerPrefs.GetInt("HighScore", 0));
+        SoundManager.Instance.Play(ESoundType.BGM, "BGM_Title");
     }
 
     private IEnumerator IGoInGame()
