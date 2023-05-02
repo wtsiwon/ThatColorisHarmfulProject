@@ -16,6 +16,9 @@ public class GameManager : Singleton<GameManager>
     private Camera cam;
 
     [SerializeField]
+    private GameObject player;
+
+    [SerializeField]
     [Tooltip("HpUIs")]
     private List<Image> hpUIList = new List<Image>();
 
@@ -287,16 +290,16 @@ public class GameManager : Singleton<GameManager>
             }
             else
             {
-                Drop();
                 Hp -= 1;
+                Drop();
             }
         }
         else if (type == EButtonType.Break)
         {
             if (GetCurrentFallingObj() == EObjType.Other)
             {
-                Drop();
                 Hp -= 1;
+                Drop();
             }
             else
             {
@@ -396,7 +399,29 @@ public class GameManager : Singleton<GameManager>
 
         resultboard.SetResultBoard();
         SoundManager.Instance.Play(ESoundType.SFX, "SFX_Game_Over");
+        StartCoroutine(nameof(IPlayerFall));
+            
         isGameStart = false;
+    }
+
+    private IEnumerator IPlayerFall()
+    {
+        float current = 0;
+        float percent = 0;
+        Vector3 startPos = player.transform.position;
+        Vector3 endPos = new Vector3(0, -7f, 0);
+
+
+        while(percent < 1)
+        {
+            current += Time.deltaTime;
+            percent = current / 0.7f;
+
+            player.transform.position = Vector3.Lerp(startPos, endPos, percent);
+            yield return null;
+        }
+
+        yield break;
     }
 
     public void CameraShake(float time, float range)

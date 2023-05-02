@@ -2839,6 +2839,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dontDestroyOnLoad: 0
   cam: {fileID: 1153914343}
+  player: {fileID: 710621056}
   hpUIList:
   - {fileID: 1820687289}
   - {fileID: 962496480}

@@ -31,21 +31,8 @@ public class ObjSpawner : Singleton<ObjSpawner>
     private void Start()
     {
         AddResources();
-        //StartCoroutine(nameof(ISpawn));
     }
 
-    private IEnumerator ISpawn()
-    {
-        while (true)
-        {
-            if (isSpawn)
-            {
-                yield return new WaitForSeconds(spawnInterval);
-                ObjSpawn();
-            }
-            yield return null;
-        }
-    }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
