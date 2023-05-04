@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
-using Unity.PlasticSCM.Editor.WebApi;
-
 public class TitleManager : MonoBehaviour
 {
     [SerializeField]
